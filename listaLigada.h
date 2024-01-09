@@ -19,6 +19,7 @@ typedef struct _no_ {
 
 typedef struct {
     no* primeiro;
+    char* linhas[TAMANHO];
 } lista_ligada;
 
 
@@ -29,8 +30,19 @@ lista_ligada* cria_lista() {
     return lista;
 }
 
+void salva_linha(lista_ligada* lista, int numero_linha, char* linha) {
+    // Check if the line number is within bounds
+    if (numero_linha >= 0 && numero_linha < TAMANHO) {
+        // Allocate memory for the line and copy it
+        lista->linhas[numero_linha+1] = strdup(linha);
+    } else {
+        // Handle the case where the line number is out of bounds
+        printf("Error: Line number out of bounds\n");
+    }
+}
+
 //adiciona um no, verificando se a palavra ja existe no catalogo
-int adiciona_no(lista_ligada* lista, char* palavra, int linha) {
+int adiciona_no(lista_ligada* lista, char* palavra, int linha, char* copia_linha) {
     //se a palavra tem tamanho, em bytes, igual a 0, retorna 0, que significa erro
     if (strlen(palavra) == 0) return 0;
 
@@ -53,6 +65,8 @@ int adiciona_no(lista_ligada* lista, char* palavra, int linha) {
                 linha_nova->quantidade = linha+1;
                 linha_nova->proximo = NULL;
                 linha_atual->proximo = linha_nova;
+                // strcpy(aux->linhas_aparece->buffer_linhas[linha+1], copia_linha);
+                // aux->linhas_aparece->count_linhas++;
 
                 //retorna 1, que significa que a funcao deu certo, porem nao adicionou um no novo
                 return 1;
@@ -77,6 +91,9 @@ int adiciona_no(lista_ligada* lista, char* palavra, int linha) {
     linha_nova->proximo = NULL;
     novo->linhas_aparece = linha_nova;
     novo->proximo = NULL;
+    // strcpy(novo->linhas_aparece->buffer_linhas[linha+1], copia_linha);
+    // novo->linhas_aparece->count_linhas = 1;
+
 
     //verifica se o no deve ser inserido na primeira posicao da lista ou nao
     if (aux == NULL) {
@@ -96,7 +113,7 @@ void cria_lista_nova(lista_ligada* lista) {
     while (atual != NULL){
         //passa por todos os elementos da lista, criando uma lista nova com 10 espaços de memoria zerados
         lista_linha *linha_atual = atual->linhas_aparece;
-        atual->lista_nova = (int *)calloc(10, sizeof(int)); 
+        atual->lista_nova = (int *)calloc(TAMANHO, sizeof(int)); 
 
         //atribui os devidos valores nas novas listas
         while (linha_atual != NULL){
@@ -108,10 +125,34 @@ void cria_lista_nova(lista_ligada* lista) {
     }
 }
 
+void buscalista(lista_ligada* lista, char* palavra) {
+    no* busca = lista->primeiro;
+    
+
+    while (busca) {
+        if (strcmp(busca->palavra, palavra) == 0) {
+            printf("Existem %i ocorrências da palavra '%s' na(s) seguinte(s) linha(s): \n", busca->quantidade, busca->palavra);
+
+            // Ensure that the lista_nova array is initialized
+            if (busca->lista_nova == NULL) {
+                return;
+            }
+
+            for (int i = 0; i < TAMANHO; i++) {
+                // Print the line numbers where the word appears
+                if (busca->lista_nova[i] > 0) {
+                    printf("Linha %i: %s\n", i, lista->linhas[i+1]);
+                }
+            }
+        }
+
+        busca = busca->proximo;
+    }
+}
+
 
 //funcao para testes, sera excluida no proeto final
 void printLista(lista_ligada *lista){
-    cria_lista_nova(lista);
     no *atual = lista->primeiro;
 
     while (atual != NULL)
@@ -120,7 +161,7 @@ void printLista(lista_ligada *lista){
         printf("Quantidade: %d\n", atual->quantidade);
 
         // Print lines of appearance
-        printf("Linhas Velha: ");
+        printf("Linhas Velhas: ");
         lista_linha *linha_atual = atual->linhas_aparece;
         while (linha_atual != NULL){
             printf("%d ", linha_atual->quantidade);
@@ -128,10 +169,14 @@ void printLista(lista_ligada *lista){
 
         }
         printf("\n");
-        printf("Lista Nova: ");
-        for(int i = 0; i < 10; i++) {
+        printf("Linhas Novas: ");
+        for(int i = 0; i < TAMANHO; i++) {
             printf("%i", atual->lista_nova[i]);
         }
+
+        // for(int i = 0; i < TAMANHO; i++) {
+        //     printf("%s", atual->linhas_aparece->buffer_linhas[i]);
+        // }
 
         printf("\n\n");
 

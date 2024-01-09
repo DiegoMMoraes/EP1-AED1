@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include "listaLigada.h"
+#define TAMANHO 1000
 
 char* mystrsep(char** stringp, const char* delim) {
     char* start = *stringp;
@@ -37,4 +39,16 @@ char* formata_string(char *input) {
     //adiciona o caractere final a string
     output[j] = '\0';
     return output;
+}
+
+void busca(lista_ligada* lista, char* palavra, char* tipo_indice) {
+    clock_t ini, fim;
+    ini = clock();
+    if(strcmp(tipo_indice, "lista") == 0) buscalista(lista, palavra);
+
+    // codigo
+
+
+    fim = clock();
+    printf("Tempo de busca: %d ms \n", (1000*(fim - ini) / CLOCKS_PER_SEC));
 }

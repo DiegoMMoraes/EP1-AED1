@@ -3,7 +3,6 @@
 #include <string.h>
 #include <time.h>
 #include "functions.h"
-#include "listaLigada.h"
 
 #define TAMANHO 1000
 
@@ -19,7 +18,7 @@ int main(int argc, char ** argv){
 	char* linha_formatada;
 	char* palavra_formatada;
 	int contador_linha;
-	int tempI, tempF;
+	clock_t tempI, tempF;
 
 	//verifica se o numero de argumentos dado na execução é correto
 	if(argc == 3) {
@@ -53,12 +52,13 @@ int main(int argc, char ** argv){
 
 			copia_ponteiro_linha = linha;
 			linha_formatada = formata_string(copia_ponteiro_linha);
+			salva_linha(lista, contador_linha+1, linha);
 
 			while( (palavra_formatada = mystrsep(&linha_formatada, " ")) ){
 
 				//adiciona "nos" na lista, se o tipo for lista
 				if(strcmp(tipo_indice, "lista") == 0) {
-					adiciona_no(lista, palavra_formatada, contador_linha);
+					adiciona_no(lista, palavra_formatada, contador_linha, copia_ponteiro_linha);
 				}
 
 				palavra = mystrsep(&copia_ponteiro_linha, " ");
@@ -71,7 +71,7 @@ int main(int argc, char ** argv){
 			contador_linha++;
 		}
 
-
+		cria_lista_nova(lista);
 		printf(">>>>> Arquivo carregado!\n");
 
 		//finaliza o temporizador
@@ -81,12 +81,46 @@ int main(int argc, char ** argv){
 		printf("Tipo de indice: '%s' \n", tipo_indice);
 		printf("Arquivo de texto: '%s' \n", nome_arquivo);
 		printf("Numero de linhas no arquivo: %i \n", contador_linha);
-		printf("Tempo para carregar o arquivo e construir o indice: %d ms \n", ((tempF - tempI) / CLOCKS_PER_SEC));
+		printf("Tempo para carregar o arquivo e construir o indice: %d ms \n", (1000*(tempF - tempI) / CLOCKS_PER_SEC));
 
 		//da um print na lista, será removido na entrega final 
-		printLista(lista);
-		return 0;
+		// tempI = clock();
+		//printLista(lista);
+		// tempF = clock();
+		// printf("%d", ((tempF - tempI) / CLOCKS_PER_SEC));
+		
+		char acao[10];
+		char palavra[50];
+		while(1){
+		printf("> ");
+		scanf("%s", &acao);
+
+		if((strcmp(acao, "fim") != 0) && (strcmp(acao, "busca") != 0)) {
+			printf("Opção Invalida. \n");
+		}
+
+		else {
+			if(strcmp(acao,"fim") == 0){
+			break;
+			}
+
+			scanf("%s", &palavra);
+
+			for(int i=0; palavra[i]; i++){
+			palavra[i] = tolower(palavra[i]);
+			}
+
+			if(strcmp(acao, "busca") == 0){
+			busca(lista, palavra, tipo_indice);
+			}
+			}
+			if(strcmp(acao,"fim") == 0){
+				break;
+		}
+
 	}
 
 	return 1;
+	
+	}
 }
