@@ -16,6 +16,8 @@ int main(int argc, char ** argv){
 	char * palavra;	
 	char* nome_arquivo;
 	char* tipo_indice;
+	char* linha_formatada;
+	char* palavra_formatada;
 	int contador_linha;
 	int tempI, tempF;
 
@@ -50,19 +52,25 @@ int main(int argc, char ** argv){
 			// não queremos que 'linha' deixe de apontar para o inicio do array).
 
 			copia_ponteiro_linha = linha;
+			linha_formatada = formata_string(copia_ponteiro_linha);
 
-			while( (palavra = mystrsep(&copia_ponteiro_linha, " ")) ){
+			while( (palavra_formatada = mystrsep(&linha_formatada, " ")) ){
 
 				//adiciona "nos" na lista, se o tipo for lista
 				if(strcmp(tipo_indice, "lista") == 0) {
-					adiciona_no(lista, palavra, contador_linha);
+					adiciona_no(lista, palavra_formatada, contador_linha);
 				}
 
-				printf("\t\t'%s'\n", palavra);
+				palavra = mystrsep(&copia_ponteiro_linha, " ");
+				if (!(palavra == NULL)) {
+					printf("\t\t'%s'\n", palavra);
+				}
+				
 			}
 
 			contador_linha++;
 		}
+
 
 		printf(">>>>> Arquivo carregado!\n");
 
@@ -76,7 +84,7 @@ int main(int argc, char ** argv){
 		printf("Tempo para carregar o arquivo e construir o indice: %d ms \n", ((tempF - tempI) / CLOCKS_PER_SEC));
 
 		//da um print na lista, será removido na entrega final 
-		//printLista(lista);
+		printLista(lista);
 		return 0;
 	}
 
