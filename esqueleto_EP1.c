@@ -21,6 +21,14 @@ int main(int argc, char ** argv){
 	clock_t tempI, tempF;
 
 	//verifica se o numero de argumentos dado na execução é correto
+	if(argc < 3) {
+		printf("ERRO: Poucos Argumentos.");
+		return 0;
+	}
+	if(argc > 3) {
+		printf("ERRO: Muitos Argumentos.");
+		return 0;
+	}
 	if(argc == 3) {
 		//inicia o temporizador e salva nome, tipo e arquvio
 		tempI = clock();
@@ -32,8 +40,13 @@ int main(int argc, char ** argv){
 
 		//cria a lista ligada, se o tipo do indice for lista
 		lista_ligada* lista;
+		arvore* arv;
 		if(strcmp(tipo_indice, "lista") == 0) {
 			lista = cria_lista();
+		}
+
+		else if(strcmp(tipo_indice, "arvore") == 0) {
+			arv = cria_arvore();
 		}
 
 		contador_linha = 0;
@@ -52,13 +65,24 @@ int main(int argc, char ** argv){
 
 			copia_ponteiro_linha = linha;
 			linha_formatada = formata_string(copia_ponteiro_linha);
-			salva_linha(lista, contador_linha+1, linha);
+
+			if(strcmp(tipo_indice, "lista") == 0) {
+				salva_linha_lista(lista, contador_linha+1, copia_ponteiro_linha);
+			}
+
+			else if(strcmp(tipo_indice, "arvore") == 0) {
+				salva_linha_arvore(arv, contador_linha+1, copia_ponteiro_linha);
+			}
 
 			while( (palavra_formatada = mystrsep(&linha_formatada, " ")) ){
 
 				//adiciona "nos" na lista, se o tipo for lista
 				if(strcmp(tipo_indice, "lista") == 0) {
-					adiciona_no(lista, palavra_formatada, contador_linha, copia_ponteiro_linha);
+					adiciona_no(lista, palavra_formatada, contador_linha);
+				}
+
+				else if (strcmp(tipo_indice, "arvore") == 0) {
+					insere_ord(arv, palavra_formatada, contador_linha);
 				}
 
 				palavra = mystrsep(&copia_ponteiro_linha, " ");
@@ -71,9 +95,14 @@ int main(int argc, char ** argv){
 			contador_linha++;
 		}
 
-		cria_lista_nova(lista);
-		printf(">>>>> Arquivo carregado!\n");
+		if(strcmp(tipo_indice, "lista") == 0) {
+			cria_lista_nova(lista);
+		}
 
+		if(strcmp(tipo_indice, "arvore") == 0) {
+			cria_lista_nova_arvore(arv);
+		}
+		printf(">>>>> Arquivo carregado!\n");
 		//finaliza o temporizador
 		tempF = clock();
 
@@ -81,7 +110,7 @@ int main(int argc, char ** argv){
 		printf("Tipo de indice: '%s' \n", tipo_indice);
 		printf("Arquivo de texto: '%s' \n", nome_arquivo);
 		printf("Numero de linhas no arquivo: %i \n", contador_linha);
-		printf("Tempo para carregar o arquivo e construir o indice: %d ms \n", (1000*(tempF - tempI) / CLOCKS_PER_SEC));
+		printf("Tempo para carregar o arquivo e construir o indice: %04d ms \n", (1000*(tempF - tempI) / CLOCKS_PER_SEC));
 
 		//da um print na lista, será removido na entrega final 
 		// tempI = clock();
@@ -89,36 +118,39 @@ int main(int argc, char ** argv){
 		// tempF = clock();
 		// printf("%d", ((tempF - tempI) / CLOCKS_PER_SEC));
 		
+
+		// "printArvore(arv);
+		//código para realizacao da busca
 		char acao[10];
 		char palavra[50];
 		while(1){
-		printf("> ");
-		scanf("%s", &acao);
+			printf("> ");
+			scanf("%s", &acao);
 
-		if((strcmp(acao, "fim") != 0) && (strcmp(acao, "busca") != 0)) {
-			printf("Opção Invalida. \n");
-		}
-
-		else {
-			if(strcmp(acao,"fim") == 0){
-			break;
+			// verifica se a acao é valida
+			if((strcmp(acao, "fim") != 0) && (strcmp(acao, "busca") != 0)) {
+				printf("Opção Invalida. \n");
 			}
 
-			scanf("%s", &palavra);
-
-			for(int i=0; palavra[i]; i++){
-			palavra[i] = tolower(palavra[i]);
-			}
-
-			if(strcmp(acao, "busca") == 0){
-			busca(lista, palavra, tipo_indice);
-			}
-			}
-			if(strcmp(acao,"fim") == 0){
+			else {
+				// verifica se a acao==fim
+				if(strcmp(acao,"fim") == 0){
 				break;
-		}
+				}
 
-	}
+				scanf("%s", &palavra);
+
+				// transforma todas as letras da palavra em minusculas
+				for(int i=0; palavra[i]; i++){
+				palavra[i] = tolower(palavra[i]);
+				}
+
+				// faz a busca (para implementação da lista)
+				if(strcmp(acao, "busca") == 0){
+				busca(lista, arv, palavra, tipo_indice);
+				}
+			}
+		}
 
 	return 1;
 	

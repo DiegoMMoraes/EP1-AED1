@@ -30,7 +30,7 @@ lista_ligada* cria_lista() {
     return lista;
 }
 
-void salva_linha(lista_ligada* lista, int numero_linha, char* linha) {
+void salva_linha_lista(lista_ligada* lista, int numero_linha, char* linha) {
     // Check if the line number is within bounds
     if (numero_linha >= 0 && numero_linha < TAMANHO) {
         // Allocate memory for the line and copy it
@@ -42,7 +42,7 @@ void salva_linha(lista_ligada* lista, int numero_linha, char* linha) {
 }
 
 //adiciona um no, verificando se a palavra ja existe no catalogo
-int adiciona_no(lista_ligada* lista, char* palavra, int linha, char* copia_linha) {
+int adiciona_no(lista_ligada* lista, char* palavra, int linha) {
     //se a palavra tem tamanho, em bytes, igual a 0, retorna 0, que significa erro
     if (strlen(palavra) == 0) return 0;
 
@@ -125,7 +125,7 @@ void cria_lista_nova(lista_ligada* lista) {
     }
 }
 
-void buscalista(lista_ligada* lista, char* palavra) {
+int buscalista(lista_ligada* lista, char* palavra) {
     no* busca = lista->primeiro;
     
 
@@ -135,7 +135,7 @@ void buscalista(lista_ligada* lista, char* palavra) {
 
             // Ensure that the lista_nova array is initialized
             if (busca->lista_nova == NULL) {
-                return;
+                return -1;
             }
 
             for (int i = 0; i < TAMANHO; i++) {
@@ -144,10 +144,13 @@ void buscalista(lista_ligada* lista, char* palavra) {
                     printf("Linha %i: %s\n", i, lista->linhas[i+1]);
                 }
             }
+            return 0;
         }
 
         busca = busca->proximo;
     }
+    printf("Palavra '%s' nao encontrada. \n", palavra);
+    return -1;
 }
 
 
