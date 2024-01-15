@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#define TAMANHO 1000
+#define TAMANHO 10000
 
 typedef struct _linha_{
     int quantidade;
