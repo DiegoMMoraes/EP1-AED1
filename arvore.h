@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-#define TAMANHO 1000
+#define TAMANHO 10000
 #define FALSE 0
 #define TRUE 1
 typedef int bool;
