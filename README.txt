@@ -1,4 +1,6 @@
 Exercício Programa de Análise e Estrutura de Dados I – Indexador e Buscador de Palavras
+Diego Machado de Moraes - 14652567
+Mariana Borges Araujo da Silva - 14596342
 
 O exercício programa realizado tem como objetivo buscar palavras em um texto, apresentando quantas vezes ela se repete e em quais linhas do texto a palavra está presente. Para que essa busca seja feita, foram implementadas duas formas de busca: por Lista Ligada ou por Árvore Binária, ficando a critério do usuário selecionar qual forma de busca quer-se aplicar. 
 
@@ -9,7 +11,7 @@ O exercício programa realizado tem como objetivo buscar palavras em um texto, a
 
 2. Para executar o projeto, siga as seguintes instruções: 
 2.1 Após a compilação do projeto, ponha no diretório onde foi gerado executável o arquivo contendo o texto que se deseja realizar a busca de palavras;
-2.2 Feito isso, digite o comando: '.\esqueleto_EP1.exe .\ <NomeDoArquivo> <FormaDeBusca>', onde <NomeDoArquivo> refere-se ao nome do arquivo contendo o texto a ser usado na busca (obs: informe a extensão do texto a ser usado) e <FormaDeBusca> refere-se a qual tipo de busca o programa deve usar: busca por Lista Ligada ou busca por Árvore Binária, por exemplo: '.\esqueletoEP1.exe .\text.txt lista' ou '.\esqueletoEP1.exe .\text.txt arvore';
+2.2 Feito isso, digite o comando: '.\esqueleto_EP1.exe .\ <NomeDoArquivo> <FormaDeBusca>', onde <NomeDoArquivo> refere-se ao nome do arquivo contendo o texto, com, no máximo, 9999 linhas, a ser usado na busca (obs: informe a extensão do texto a ser usado) e <FormaDeBusca> refere-se a qual tipo de busca o programa deve usar: busca por Lista Ligada ou busca por Árvore Binária, por exemplo: '.\esqueletoEP1.exe .\text.txt lista' ou '.\esqueletoEP1.exe .\text.txt arvore';
 2.3 Feito isso, um prompt de comando aparecerá para o usuário: “>”. Nesse prompt, para buscar as palavras, o usuário deve digitar 'busca <Palavra>', onde <Palavra> se refere a palavra que se deseja buscar no texto. Exemplo '> busca oi'. Ao informar a palavra desejada, o usuário deve receber as seguintes informações:
  
 • Quantas ocorrências da palavra buscada existem no texto;

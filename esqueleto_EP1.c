@@ -1,10 +1,15 @@
+// EP1 – Algoritmos e Estruturas de Dados I
+// Diego Machado de Moraes - 14652567
+// Mariana Borges Araujo da Silva - 14596342
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include "functions.h"
 
-#define TAMANHO 1000
+#define TAMANHO 10000
 
 int main(int argc, char ** argv){
 
@@ -57,7 +62,7 @@ int main(int argc, char ** argv){
 			
 			if( (quebra_de_linha = strrchr(linha, '\n')) ) *quebra_de_linha = 0;
 
-			// print no numero da linha e no texto da linha
+			//print no numero da linha e no texto da linha
 			printf("linha %03d: '%s'\n", contador_linha + 1, linha);
 
 
@@ -86,7 +91,7 @@ int main(int argc, char ** argv){
 					insere_ord(arv, palavra_formatada, contador_linha);
 				}
 
-				// imprime a palavra
+				//imprime a palavra
 				palavra = mystrsep(&copia_ponteiro_linha, " ");
 				if (!(palavra == NULL)) {
 					printf("\t\t'%s'\n", palavra);
