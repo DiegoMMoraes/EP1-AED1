@@ -129,13 +129,7 @@ int main(int argc, char ** argv){
 		while(1){
 			printf("> ");
 			scanf("%s", &acao);
-
-			// verifica se a acao é valida
-			if((strcmp(acao, "fim") != 0) && (strcmp(acao, "busca") != 0)) {
-				printf("Opção Invalida. \n");
-			}
-
-			else {
+			
 				// verifica se a acao==fim
 				if(strcmp(acao,"fim") == 0){
 				break;
@@ -152,7 +146,10 @@ int main(int argc, char ** argv){
 				if(strcmp(acao, "busca") == 0){
 				busca(lista, arv, palavra, tipo_indice);
 				}
-			}
+
+				else {
+					printf("Opção inválida! \n");
+				}
 		}
 	return 1;
 	
