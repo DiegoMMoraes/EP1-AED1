@@ -19,7 +19,7 @@ typedef struct _no_arvore {
     lista_linha_arvore* linhas_aparece;
     struct _no_arvore* esquerda;
     struct _no_arvore* direita;
-    int* lista_nova; // Note: This field was declared but not used, you may remove it if unnecessary
+    int* lista_nova;
 } no_arvore;
 
 typedef struct {
@@ -27,37 +27,35 @@ typedef struct {
     char* linhas[TAMANHO];
 } arvore;
 
-// Function to create a new tree
+// inicializa uma nova árvore, atribuindo o valor correto para raiz
 arvore* cria_arvore() {
     arvore* arv = (arvore*)malloc(sizeof(arvore));
     arv->raiz = NULL;
     return arv;
 }
 
-// Function to save a line in the tree
 void salva_linha_arvore(arvore* arv, int numero_linha, char* linha) {
-    // Check if the line number is within bounds
+    // checa o numero da linha é válido
     if (numero_linha >= 0 && numero_linha < TAMANHO) {
-        // Allocate memory for the line and copy it
-        arv->linhas[numero_linha] = strdup(linha); // Fixed index, and removed +1
+        // salva a linha
+        arv->linhas[numero_linha] = strdup(linha);
     } else {
-        // Handle the case where the line number is out of bounds
-        printf("ERRO: Número máximo de linhas atingido\n");
+        printf("ERRO: Número máximo de linhas atingido. \n");
     }
 }
 
-bool insere_ord_rec(no_arvore* raiz, no_arvore* novo) {
-    // Cria nó novo (palavra não existe no catálogo)
+bool insere_ord_rec(no_arvore* raiz, no_arvore* novo, int linha) {
+    // procura se a palavra já existe, se não existir, inclua o novo nó na árvore
     if (strcmp(raiz->palavra, novo->palavra) != 0) {
         if (strcmp(raiz->palavra, novo->palavra) > 0) {
             if (raiz->esquerda) 
-                return insere_ord_rec(raiz->esquerda, novo);
+                return insere_ord_rec(raiz->esquerda, novo, linha);
             else {
                 raiz->esquerda = novo;
             }
         } else {
             if (raiz->direita) 
-                return insere_ord_rec(raiz->direita, novo);
+                return insere_ord_rec(raiz->direita, novo, linha);
             else 
                 raiz->direita = novo;
         }
@@ -68,12 +66,13 @@ bool insere_ord_rec(no_arvore* raiz, no_arvore* novo) {
         raiz->quantidade++;
         lista_linha_arvore* linha_atual = raiz->linhas_aparece;
 
+        // adiciona o número da linha na lista ligada de número de linhas
         while (linha_atual->proximo != NULL) {
             linha_atual = linha_atual->proximo;
         }
 
         lista_linha_arvore* linha_nova = (lista_linha_arvore*)malloc(sizeof(lista_linha_arvore));
-        linha_nova->quantidade = linha_atual->quantidade + 1; // Fix here
+        linha_nova->quantidade = linha+1;
         linha_nova->proximo = NULL;
         linha_atual->proximo = linha_nova;
     }
@@ -82,6 +81,7 @@ bool insere_ord_rec(no_arvore* raiz, no_arvore* novo) {
 }
 
 bool insere_ord(arvore* arv, char* palavra, int linha) {
+    //cria um novo nó, atribuindo os devidos valores
     no_arvore* novo = (no_arvore*)malloc(sizeof(no_arvore));
 
     novo->palavra = strdup(palavra);
@@ -94,16 +94,18 @@ bool insere_ord(arvore* arv, char* palavra, int linha) {
 
     novo->esquerda = novo->direita = NULL;
 
+    // verifica se o nó será adicionado na raiz da lista ou não
     if (arv->raiz) 
-        return insere_ord_rec(arv->raiz, novo);
+        return insere_ord_rec(arv->raiz, novo, linha);
     else
         arv->raiz = novo;
 
     return TRUE;
 }
 
-
+//funcao utilizada para criar uma forma melhorada de trabalhar com as linhas em que a palavra aparece
 void cria_lista_nova_arvore_rec(no_arvore* raiz) {
+    // passa por todos os elementos recursivamente, criando a lista nova
     if (raiz) {
         cria_lista_nova_arvore_rec(raiz->esquerda);
 
@@ -126,13 +128,13 @@ no_arvore* buscaarvore_rec(arvore* arv, no_arvore* no, char* palavra) {
         if (strcmp(no->palavra, palavra) == 0) {
             printf("Existem %i ocorrência(s) da palavra '%s' na(s) seguinte(s) linha(s):\n", no->quantidade, palavra);
 
-            // Ensure that the lista_nova array is initialized
+            // garante a lista_nova foi inicializada
             if (no->lista_nova == NULL) {
                 return NULL;
             }
 
             for (int i = 0; i < TAMANHO; i++) {
-                // Print the line numbers where the word appears
+                // imprime as linhas em que palavra aprece
                 if (no->lista_nova[i] > 0) {
                     printf("Linha %i: %s\n", i, arv->linhas[i]);
                 }
@@ -157,33 +159,4 @@ no_arvore* buscaarvore(arvore* arv, char* palavra) {
 
 void cria_lista_nova_arvore (arvore* arv) {
     cria_lista_nova_arvore_rec(arv->raiz);
-}
-
-// Function to perform inorder traversal
-void printArvore_rec(no_arvore* raiz) {
-    if (raiz) {
-        printArvore_rec(raiz->esquerda);
-        printf("Palavra: '%s' \\ ", raiz->palavra);
-        printf("Quantidade: %i \\ ", raiz->quantidade);
-        
-        printf("Linhas Velhas: ");
-        lista_linha_arvore *linha_atual = raiz->linhas_aparece;
-        while (linha_atual != NULL){
-            printf("%d ", linha_atual->quantidade);
-            linha_atual = linha_atual->proximo;
-
-        }
-
-        printf("\\ Linhas Novas: ");
-        for(int i = 0; i < TAMANHO; i++) {
-            printf("%i", raiz->lista_nova[i]);
-        }
-        printf("\n \n");
-        printArvore_rec(raiz->direita);
-    }
-}
-
-void printArvore(arvore* arv) {
-    printf("Elementos da Árvore: \n");
-    printArvore_rec(arv->raiz);
 }

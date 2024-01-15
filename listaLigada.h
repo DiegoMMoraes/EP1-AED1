@@ -31,13 +31,12 @@ lista_ligada* cria_lista() {
 }
 
 void salva_linha_lista(lista_ligada* lista, int numero_linha, char* linha) {
-    // Check if the line number is within bounds
+    // checa o numero da linha é válido
     if (numero_linha >= 0 && numero_linha < TAMANHO) {
-        // Allocate memory for the line and copy it
+        // salva a linha
         lista->linhas[numero_linha+1] = strdup(linha);
     } else {
-        // Handle the case where the line number is out of bounds
-        printf("Error: Line number out of bounds\n");
+        printf("ERRO: Número máximo de linhas atingido. \n");
     }
 }
 
@@ -65,14 +64,12 @@ int adiciona_no(lista_ligada* lista, char* palavra, int linha) {
                 linha_nova->quantidade = linha+1;
                 linha_nova->proximo = NULL;
                 linha_atual->proximo = linha_nova;
-                // strcpy(aux->linhas_aparece->buffer_linhas[linha+1], copia_linha);
-                // aux->linhas_aparece->count_linhas++;
 
                 //retorna 1, que significa que a funcao deu certo, porem nao adicionou um no novo
                 return 1;
             }
 
-        //evita que o programa acesse uma memoria que nao eh reservada para ele
+        //evita que o programa acesse uma memoria que nao é reservada para ele
         if (aux->proximo == NULL) {
             break;
         }
@@ -91,8 +88,6 @@ int adiciona_no(lista_ligada* lista, char* palavra, int linha) {
     linha_nova->proximo = NULL;
     novo->linhas_aparece = linha_nova;
     novo->proximo = NULL;
-    // strcpy(novo->linhas_aparece->buffer_linhas[linha+1], copia_linha);
-    // novo->linhas_aparece->count_linhas = 1;
 
 
     //verifica se o no deve ser inserido na primeira posicao da lista ou nao
@@ -111,7 +106,7 @@ void cria_lista_nova(lista_ligada* lista) {
     no *atual = lista->primeiro;
 
     while (atual != NULL){
-        //passa por todos os elementos da lista, criando uma lista nova com 10 espaços de memoria zerados
+        //passa por todos os elementos da lista, criando uma lista nova com TAMANHO espaços de memoria zerados
         lista_linha *linha_atual = atual->linhas_aparece;
         atual->lista_nova = (int *)calloc(TAMANHO, sizeof(int)); 
 
@@ -128,18 +123,18 @@ void cria_lista_nova(lista_ligada* lista) {
 int buscalista(lista_ligada* lista, char* palavra) {
     no* busca = lista->primeiro;
     
-
+    // encontra a palavra no catálogo
     while (busca) {
         if (strcmp(busca->palavra, palavra) == 0) {
             printf("Existem %i ocorrências da palavra '%s' na(s) seguinte(s) linha(s): \n", busca->quantidade, busca->palavra);
 
-            // Ensure that the lista_nova array is initialized
+            // garante que lista_nova foi inicializado
             if (busca->lista_nova == NULL) {
                 return -1;
             }
 
             for (int i = 0; i < TAMANHO; i++) {
-                // Print the line numbers where the word appears
+                // imprime as linhas em que palavra aparece
                 if (busca->lista_nova[i] > 0) {
                     printf("Linha %i: %s\n", i, lista->linhas[i+1]);
                 }
@@ -151,38 +146,4 @@ int buscalista(lista_ligada* lista, char* palavra) {
     }
     printf("Palavra '%s' nao encontrada. \n", palavra);
     return -1;
-}
-
-
-//funcao para testes, sera excluida no proeto final
-void printLista(lista_ligada *lista){
-    no *atual = lista->primeiro;
-
-    while (atual != NULL)
-    {
-        printf("Palavra: %s\n", atual->palavra);
-        printf("Quantidade: %d\n", atual->quantidade);
-
-        // Print lines of appearance
-        printf("Linhas Velhas: ");
-        lista_linha *linha_atual = atual->linhas_aparece;
-        while (linha_atual != NULL){
-            printf("%d ", linha_atual->quantidade);
-            linha_atual = linha_atual->proximo;
-
-        }
-        printf("\n");
-        printf("Linhas Novas: ");
-        for(int i = 0; i < TAMANHO; i++) {
-            printf("%i", atual->lista_nova[i]);
-        }
-
-        // for(int i = 0; i < TAMANHO; i++) {
-        //     printf("%s", atual->linhas_aparece->buffer_linhas[i]);
-        // }
-
-        printf("\n\n");
-
-        atual = atual->proximo;
-    }
 }

@@ -5,6 +5,7 @@
 #include "listaLigada.h"
 #include "arvore.h"
 
+// funcao usada para substituir o strsep, que nao existe no windows
 char* mystrsep(char** stringp, const char* delim) {
     char* start = *stringp;
     char* p = (start != NULL) ? strpbrk(start, delim) : NULL;
@@ -41,6 +42,7 @@ char* formata_string(char *input) {
     return output;
 }
 
+// funcao auxiliar a busca
 void busca(lista_ligada* lista, arvore* arv ,char* palavra, char* tipo_indice) {
     clock_t ini, fim;
     ini = clock(); 

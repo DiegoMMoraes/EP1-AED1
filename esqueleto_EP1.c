@@ -38,14 +38,15 @@ int main(int argc, char ** argv){
 
 		printf(">>>>> Carregando arquivo...\n");
 
-		//cria a lista ligada, se o tipo do indice for lista
+		//inicializa a lista ligada, se o tipo do indice for lista
 		lista_ligada* lista;
-		arvore* arv;
 		if(strcmp(tipo_indice, "lista") == 0) {
 			lista = cria_lista();
 		}
 
-		else if(strcmp(tipo_indice, "arvore") == 0) {
+		// inicializa a arvore, se o tipo indice for arvore
+		arvore* arv;
+		if(strcmp(tipo_indice, "arvore") == 0) {
 			arv = cria_arvore();
 		}
 
@@ -56,16 +57,15 @@ int main(int argc, char ** argv){
 			
 			if( (quebra_de_linha = strrchr(linha, '\n')) ) *quebra_de_linha = 0;
 
+			// print no numero da linha e no texto da linha
 			printf("linha %03d: '%s'\n", contador_linha + 1, linha);
 
-			// fazemos uma copia do endereço que corresponde ao array de chars 
-			// usado para armazenar cada linha lida do arquivo pois a função 'mystrsep' 
-			// modifica o endereço do ponteiro a cada chamada feita a esta função (e 
-			// não queremos que 'linha' deixe de apontar para o inicio do array).
 
+			// salva a linha original e uma versão em que a linha esta formatada
 			copia_ponteiro_linha = linha;
 			linha_formatada = formata_string(copia_ponteiro_linha);
 
+			// salva a linha de acordo com o tipo do indice
 			if(strcmp(tipo_indice, "lista") == 0) {
 				salva_linha_lista(lista, contador_linha+1, copia_ponteiro_linha);
 			}
@@ -81,10 +81,12 @@ int main(int argc, char ** argv){
 					adiciona_no(lista, palavra_formatada, contador_linha);
 				}
 
+				// adiciona o nos na arvore, se o tipo for arvore
 				else if (strcmp(tipo_indice, "arvore") == 0) {
 					insere_ord(arv, palavra_formatada, contador_linha);
 				}
 
+				// imprime a palavra
 				palavra = mystrsep(&copia_ponteiro_linha, " ");
 				if (!(palavra == NULL)) {
 					printf("\t\t'%s'\n", palavra);
@@ -95,6 +97,7 @@ int main(int argc, char ** argv){
 			contador_linha++;
 		}
 
+		//cria uma nova lista, a qual possibilita a busca
 		if(strcmp(tipo_indice, "lista") == 0) {
 			cria_lista_nova(lista);
 		}
@@ -102,24 +105,19 @@ int main(int argc, char ** argv){
 		if(strcmp(tipo_indice, "arvore") == 0) {
 			cria_lista_nova_arvore(arv);
 		}
+
+
 		printf(">>>>> Arquivo carregado!\n");
 		//finaliza o temporizador
 		tempF = clock();
 
-		//print em informações pedidas por coutinho
+		//print em informações úteis
 		printf("Tipo de indice: '%s' \n", tipo_indice);
 		printf("Arquivo de texto: '%s' \n", nome_arquivo);
 		printf("Numero de linhas no arquivo: %i \n", contador_linha);
 		printf("Tempo para carregar o arquivo e construir o indice: %04d ms \n", (1000*(tempF - tempI) / CLOCKS_PER_SEC));
 
-		//da um print na lista, será removido na entrega final 
-		// tempI = clock();
-		//printLista(lista);
-		// tempF = clock();
-		// printf("%d", ((tempF - tempI) / CLOCKS_PER_SEC));
-		
 
-		// "printArvore(arv);
 		//código para realizacao da busca
 		char acao[10];
 		char palavra[50];
@@ -145,13 +143,12 @@ int main(int argc, char ** argv){
 				palavra[i] = tolower(palavra[i]);
 				}
 
-				// faz a busca (para implementação da lista)
+				// faz a busca
 				if(strcmp(acao, "busca") == 0){
 				busca(lista, arv, palavra, tipo_indice);
 				}
 			}
 		}
-
 	return 1;
 	
 	}
